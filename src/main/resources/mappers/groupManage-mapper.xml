@@ -9,5 +9,87 @@
   WHERE GROUP_NAME = #{inputName}
   AND GROUP_NO > 0
   </select>
+  
+  <!-- 카테고리 리스트 검색 -->
+  <select id="getCategoryList" resultType="ManageCategory">
+  	SELECT
+  		CATEGORY_LIST_NO,
+  		CATEGORY_LIST_NAME,
+  		CATEGORY_NO
+  	FROM
+  		"CATEGORY_LIST"
+  	WHERE
+  		CATEGORY_NO = #{categoryNo}
+  	AND	CATEGORY_LIST_NO > 0
+  </select>
+  
+  <!-- 카테고리 검색 -->
+  <select id="getCategoryArr" resultType="ManageCategory">
+  	SELECT
+  		CATEGORY_NO,
+  		CATEGORY_NAME,
+  		CATEGORY_IMG
+  	FROM "CATEGORY"
+  	WHERE CATEGORY_NO > 0
+  </select>
+  
+  <!-- 그룹 생성 -->
+  <insert id="createGroup"
+  			parameterType="GroupManageDto"
+  			useGeneratedKeys="true">
+  		
+  		<!-- 동적 SQL을 이용해 GROUP_NO 생성 -->
+  		<selectKey order="BEFORE"
+					resultType="_int"
+					keyProperty="groupNo">
+			SELECT SEQ_GROUP_NO.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT INTO "GROUP"
+		VALUES (
+			#{groupNo},
+			#{groupName},
+			DEFAULT, DEFAULT,
+			#{groupIntroduce},
+			#{categoryNo},
+			#{categoryListNo},
+			#{memberNo},
+			#{groupMainImg},
+			NULL
+			)
+		
+  </insert>
+  
+  <!-- 그룹 조회 -->
+  <select id="selectGroup" resultType="GroupManageDto">
+  	SELECT
+  		GROUP_NO,
+  		GROUP_NAME,
+  		GROUP_DATE,
+  		GROUP_DEL_FL,
+  		GROUP_INTRODUCE,
+  		CATEGORY_NO,
+  		CATEGORY_LIST_NO,
+  		MEMBER_NO,
+  		GROUP_MAIN_IMG,
+  		GROUP_HEADER_IMG,
+			(SELECT CATEGORY_NAME FROM "CATEGORY" C WHERE C.CATEGORY_NO = G.CATEGORY_NO) AS "CATEGORY_NAME",
+			(SELECT CATEGORY_LIST_NAME FROM "CATEGORY_LIST" C WHERE C.CATEGORY_LIST_NO = G.CATEGORY_LIST_NO) AS "CATEGORY_LIST_NAME"
+  	FROM "GROUP" G
+  	WHERE GROUP_NO = #{groupNo}
+  </select>
+<!-- 
+groupNo
+groupName
+groupDate
+groupDelFl
+groupIntroduce
+categoryNo
+categoryListNo
+memberNo
+groupMainImg
+groupHeaderIm
+ -->
+
 
 </mapper>

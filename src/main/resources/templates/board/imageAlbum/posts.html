@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .post {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .post img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>게시글 목록</h1>
+
+<div id="posts"></div>
+
+<script>
+    const postsContainer = document.getElementById('posts');
+    const posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+    posts.forEach(post => {
+        const postContainer = document.createElement('div');
+        postContainer.classList.add('post');
+
+        const postTitle = document.createElement('h2');
+        postTitle.textContent = post.title;
+
+        const postImage = document.createElement('img');
+        postImage.src = post.imageUrl;
+
+        postContainer.appendChild(postTitle);
+        postContainer.appendChild(postImage);
+        postsContainer.appendChild(postContainer);
+    });
+
+    if (posts.length === 0) {
+        postsContainer.innerHTML = '<p>게시글이 없습니다.</p>';
+    }
+</script>
+
+</body>
+</html>

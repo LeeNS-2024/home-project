@@ -4,8 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 생성</title>
-
-    <link rel="stylesheet" href="/css/board/imageAlbum/imageUpload-style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 300px; /* 제목 입력 칸의 너비 조정 */
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .file-input {
+            margin: 10px 0;
+        }
+        input[type="submit"] {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .image-preview {
+            display: none;
+            margin: 10px 0;
+            max-width: 300px; /* 미리보기 이미지의 최대 너비 */
+        }
+    </style>
 </head>
 <body>
 
@@ -16,30 +46,28 @@
     
     <!-- 이미지 입력과 미리보기 공간을 다섯 개로 반복 -->
     <div class="file-input">
-        <input type="file" class="imageInput" accept="image/*" required>
+        <input type="file" class="imageInput" accept="image/*">
         <img class="image-preview" alt="미리보기">
     </div>
     <div class="file-input">
-        <input type="file" class="imageInput" accept="image/*" required>
+        <input type="file" class="imageInput" accept="image/*">
         <img class="image-preview" alt="미리보기">
     </div>
     <div class="file-input">
-        <input type="file" class="imageInput" accept="image/*" required>
+        <input type="file" class="imageInput" accept="image/*">
         <img class="image-preview" alt="미리보기">
     </div>
     <div class="file-input">
-        <input type="file" class="imageInput" accept="image/*" required>
+        <input type="file" class="imageInput" accept="image/*">
         <img class="image-preview" alt="미리보기">
     </div>
     <div class="file-input">
-        <input type="file" class="imageInput" accept="image/*" required>
+        <input type="file" class="imageInput" accept="image/*">
         <img class="image-preview" alt="미리보기">
     </div>
     
     <input type="submit" value="게시글 생성">
 </form>
-
-<div id="posts"></div>
 
 <script>
     const fileInputs = document.querySelectorAll('.imageInput');
@@ -65,24 +93,21 @@
         event.preventDefault();
 
         const title = document.getElementById('title').value;
-        const postsContainer = document.getElementById('posts');
+        const posts = [];
 
-        for (let i = 0; i < fileInputs.length; i++) {
-            const imageUrl = imagePreviews[i].src;
+        fileInputs.forEach((input, index) => {
+            const imageUrl = imagePreviews[index].src;
             if (imageUrl) {
-                const postContainer = document.createElement('div');
-                postContainer.classList.add('post');
-
-                const postTitle = document.createElement('h2');
-                postTitle.textContent = title;
-
-                const postImage = document.createElement('img');
-                postImage.src = imageUrl;
-
-                postContainer.appendChild(postTitle);
-                postContainer.appendChild(postImage);
-                postsContainer.appendChild(postContainer);
+                posts.push({ title, imageUrl });
             }
+        });
+
+        if (posts.length > 0) {
+            localStorage.setItem('posts', JSON.stringify(posts));
+            alert('게시글이 생성되었습니다. 게시글 페이지로 이동합니다.');
+            window.location.href = 'posts.html'; // 게시글 페이지로 이동
+        } else {
+            alert('최소 1개의 이미지를 선택해야 합니다.');
         }
 
         // 입력값 초기화
