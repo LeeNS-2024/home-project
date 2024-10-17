@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입관리</title>
+  <link rel="stylesheet" href="/css/groupManage/manageGroup.css">
+</head>
+<body>
+
+  <!-- 해더 -->
+  <th:block th:replace= "~{common/header}" ></th:block>
+  
+
+  <main class="space-around">
+
+    <!-- 사이드메뉴 -->
+    <th:block th:replace= "~{groupManage/manageGroup :: th-lfSide }" ></th:block>
+
+
+    <section class="mainSec">
+      <h1><th:block th:text="${group.groupName}"></th:block> 차단? 신고당한? 회원 관리 <th:block th:text="${memberAllCount}"></th:block>명</h1>
+      <table border="1" id="memberManageTable">
+        <thead>
+          <tr id="tableTr">
+            <!-- 
+            오름차순 1아이디 2닉네임 3가입일 4탈퇴여부 5 벤
+            내림차순 -1아이디 -2닉네임 -3가입일 -4탈퇴여부 5벤
+            -->
+            <th class="orderBtn">아이디</th>
+            <th>프로필사진</th>
+            <th class="orderBtn">닉네임</th>
+            <th class="orderBtn">가입일</th>
+            <th>차단해제</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <th:block th:if= "${memberList}" th:each= "member:${memberList}" th:object="${member}">
+            <tr>
+              <td th:text="*{memberId}"></td>
+              <td th:text="*{memberImg}"></td>
+              <td th:text="*{memberNickname}"></td>
+              <td th:text="*{memberGroupEnrollDate}"></td>
+              <td>
+                <th:block th:unless= "*{memberNo} == ${group.memberNo}"><button>차단해제</button></th:block>
+              </td>
+            </tr>
+          </th:block>
+
+          <th:block th:if= "${#lists.isEmpty(memberList)}">
+            <tr>
+              <td colspan="6">차단인원이 없습니다.</td>
+            </tr>
+          </th:block>
+
+        </tbody>
+      </table>
+
+      <div class="pagination-area">
+
+        <ul class="pagination" th:object="${pagination}">
+
+          <!-- 페이지 변경 foward -->
+          <!-- 이제 10페이지 넘어가면 페이지 넘기는 버튼이 나올예정 -->
+          <th:block th:if= "*{maxPage > pageSize}">
+            <!-- 첫 페이지로 이동 -->
+            <li><a href="#">&lt;&lt;</a></li>
+  
+            <!-- 이전 목록 마지막 번호로 이동 -->
+            <li><a href="#">&lt;</a></li>
+          </th:block>
+
+          <!-- 특정 페이지로 이동 -->
+          <th:block th:each= "i:*{#numbers.sequence(startPage, endPage)}">
+
+            <!-- 현재 보고있는 페이지 -->
+            <li th:if= "${i} == *{currentPage}">
+              <a class="current" th:text="${i}">현재페이지</a>
+            </li>
+  
+            <!-- 보고있지 않은 페이지 -->
+            <li th:unless= "${i} == *{currentPage}">
+              <a href="#" th:text="${i}">이동할 수 있는 페이지</a>
+            </li>
+
+          </th:block>
+
+          <th:block  th:if= "*{maxPage > pageSize}">
+            <!-- 다음 목록 시작 번호로 이동 -->
+            <li><a href="#">&gt;</a></li>
+  
+            <!-- 끝 페이지로 이동 -->
+            <li><a href="#">&gt;&gt;</a></li>
+          </th:block>
+        </ul>
+      </div>
+    </section>
+
+
+    <section id="sideSec2">
+    </section>
+
+  </main>
+  
+  <!-- 푸터 -->
+  <th:block th:replace= "~{common/footer}" ></th:block>
+  <th:block th:replace= "~{common/common}" ></th:block>
+
+  <script th:inline="javascript">
+    const pagination = /*[[${pagination}]]*/ "페이지네이션 객체"
+
+
+
+  </script>
+  <script src="/js/groupManage/manageBan.js"></script>
+</body>
+</html>
