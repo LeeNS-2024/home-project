@@ -79,42 +79,6 @@ const insertComment = (parentCommentNo) => {
     alert("댓글이 등록 되었습니다.")
     commentContent.value = ""; // texttarea에 작성한 댓글 내용 삭제
     selectCommentList(); // 댓글 목록 비동기 조회 후 출력
-
-    // 알림 클릭 시 이동하는 url에 ?cn=댓글번호 추가
-    // -> 알림 클릭 시 작성된 댓글 또는 답글 위치로 바로 이동
-
-    // 댓글을 작성한 경우
-    // -> {닉네임}님이 {게시글 제목} 게시글에 댓글을 작성했습니다
-    if(parentCommentNo === undefined){
-      const content 
-      = `<string>${memberNickname}</string>님이 <strong>${boardDetail.boardTitle}</strong> 게시글에 댓글을 작성했습니다`
-
-      // type, url, pkNo, content
-      sendNotification(
-        "insertComment",
-        `${location.pathname}?cn=${commentNo}`,
-        boardDetail.boardNo,
-        content
-      );
-    }
-    else {
-      const content 
-      = `<string>${memberNickname}</string>님이 <strong>${boardDetail.boardTitle}</strong> 답글을 작성했습니다`
-
-      // type, url, pkNo, content
-      sendNotification(
-        "insertChildComment",
-        `${location.pathname}?cn=${commentNo}`,
-        parentCommentNo,
-        content
-      );
-    }
-
-    // 답글(대댓글)을 작성한 경우
-    // -> {닉네임}님이 답글을 작성했습니다
-
-
-
   })
   .catch(err => console.error(err));
 }
@@ -444,3 +408,26 @@ document.addEventListener("DOMContentLoaded", () => {
   addEventUpdateComment(); // 수정 버튼에 이벤트 추가
 });
 
+
+
+
+
+// ---------------------------------------
+// Restful -> REST 를 잘 지킨..
+/* REST(REpresentational State Transfer)  API
+
+- 자원(데이터,파일)을 이름(주소)으로 
+  구분(representational) 하여
+  자원의 상태(State)를 주고 받는 것(Transfer)
+
+ -> 자원의 이름(주소)를 명시하고
+   HTTP Method(GET,POST,PUT,DELETE) 를 이용해
+   지정된 자원에 대한 CRUD 진행
+
+  자원의 이름(주소)는 하나만 지정 (ex. /comment)
+   
+  삽입 == POST    (Create)
+  조회 == GET     (Read)
+  수정 == PUT     (Update)
+  삭제 == DELETE  (Delete)
+*/
